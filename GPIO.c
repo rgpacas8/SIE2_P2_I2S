@@ -51,13 +51,16 @@ void config_LED_RGB(void)
 	/* Init output LED GPIO. */
 	GPIO_PinInit(BOARD_LEDR_GPIO, BOARD_LEDR_GPIO_PIN, &led_config);
 	GPIO_PortSet(BOARD_LEDR_GPIO, 1u << BOARD_LEDR_GPIO_PIN);
+
 	GPIO_PinInit(BOARD_LEDG_GPIO, BOARD_LEDG_GPIO_PIN, &led_config);
 	GPIO_PortSet(BOARD_LEDG_GPIO, 1u << BOARD_LEDG_GPIO_PIN);
+	GPIO_PortClear(BOARD_LEDG_GPIO, 1u << BOARD_LEDG_GPIO_PIN);	// Inicia encendido GREEN
+
 	GPIO_PinInit(BOARD_LEDB_GPIO, BOARD_LEDB_GPIO_PIN, &led_config);
 	GPIO_PortSet(BOARD_LEDB_GPIO, 1u << BOARD_LEDB_GPIO_PIN);
 
 	/* Print a note to terminal. */
-	PRINTF("\r\nGPIO RGB Driver \r\n");
+	PRINTF("GPIO RGB Driver \n");
 }
 
 void config_SW3(void) {

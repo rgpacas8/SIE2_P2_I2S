@@ -41,28 +41,24 @@ int main(void) {
 	/* Init FSL debug console. */
 	BOARD_InitDebugConsole();
 
-	PRINTF("Hello World\n\r");
+	PRINTF("Hello World \n\r");
 
     static parameters_task_t parameters_task;
 
 	config_LED_RGB();
 	//	config_SW3();
-	I2S_config_SCK( pin6 );		// SCK - serial clock
-	I2S_config_WS(  pin7 );		// WS  - word select
-	I2S_config_SD(  pin8 );		// SD  - serial data
+	I2S_config_SCK( pin6 );		// PTA6 - SCK = serial clock
+	I2S_config_WS(  pin7 );		// PTA7 - WS  = word select
+	I2S_config_SD(  pin8 );		// PTA8 - SD  = serial data
 
-    parameters_task.Semaphore_task_word = xSemaphoreCreateBinary();
-    parameters_task.Sempahore_serial_clock = xSemaphoreCreateBinary();
-    parameters_task.Semaphore_Serial_data= xSemaphoreCreateBinary();
-//    parameters_task.counter = 0;
+	parameters_task.Semaphore_task_word = xSemaphoreCreateBinary();
+	parameters_task.event_FreeRTOs = xEventGroupCreate();
 
-    parameters_task.event_FreeRTOs = xEventGroupCreate();
+	xTaskCreate(task_SerialClock_SCK, "task_Serial_clock", 200, (void*) &parameters_task, configMAX_PRIORITIES, NULL);
+	xTaskCreate(task_WordSelect_WS,   "task_Word_select",  200, (void*) &parameters_task, configMAX_PRIORITIES, NULL);
+	xTaskCreate(task_SerialData_SD,   "task_Serial_data",  200, (void*) &parameters_task, configMAX_PRIORITIES, NULL);
 
-    xTaskCreate( task_SerialClock_SCK, "task_Serial_clock", 200, (void*)&parameters_task, configMAX_PRIORITIES,   NULL );
-    xTaskCreate( task_WordSelect_WS,   "task_Word_select",  200, (void*)&parameters_task, configMAX_PRIORITIES,   NULL );
-//    xTaskCreate( task_SerialData_SD,   "task_Serial_data",  200, (void*)&parameters_task, configMAX_PRIORITIES,   NULL );
-
-    vTaskStartScheduler();
+	vTaskStartScheduler();
 
 	while (1) {
 		// If you fall here it is so bad :(
@@ -71,7 +67,3 @@ int main(void) {
 
 	return 0;
 }
-
-
-
-

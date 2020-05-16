@@ -19,7 +19,7 @@
 #include "GPIO.h"
 
 /* TODO: insert other definitions and declarations here. */
-#define SCK_TIME_MS	1000  // t = 1000 ms    ---   f= 1/t Hz
+#define SCK_TIME_MS	500  // t = 500ms    ---   f= 1/t*2 Hz = 1Hz
 
 #define pin6 	6U	// Pin output in K66F
 #define pin7 	7U
@@ -28,21 +28,37 @@
 #define CERO 0U // State bit to transmit
 #define UNO  1U
 
-#define EVENT_PRODUCER    (1 << 0)
-#define EVENT_CONSUMER    (1 << 1)
+#define EVENT_SD    (1 << 0)
 
-typedef struct
-{
-	SemaphoreHandle_t Sempahore_serial_clock;
+
+#define MSB_bit7	0U	// Control for Switch case
+#define bit6		1U
+#define bit5		2U
+#define bit4		3U
+#define bit3		4U
+#define bit2		5U
+#define bit1		6U
+#define LSB_bit0	7U
+
+#define BYTE_bit7	0U	// Bit value to send for one BYTE
+#define BYTE_bit6	0U	// BYTE = 0x0F
+#define BYTE_bit5	0U
+#define BYTE_bit4	0U
+#define BYTE_bit3	1U
+#define BYTE_bit2	1U
+#define BYTE_bit1	1U
+#define BYTE_bit0	1U
+
+
+typedef struct {
 	SemaphoreHandle_t Semaphore_task_word;
-	SemaphoreHandle_t Semaphore_Serial_data;
 	EventGroupHandle_t event_FreeRTOs;
-//	uint32_t counter;
 } parameters_task_t;
 
-void task_SerialClock_SCK(void*data);
-void task_WordSelect_WS(void*data);
-void task_SerialData_SD(void*data);
+
+void task_SerialClock_SCK(void *data);
+void task_WordSelect_WS(void *data);
+void task_SerialData_SD(void *data);
 
 void I2S_config_SCK(uint32_t pin);
 void I2S_config_WS(uint32_t pin);
