@@ -30,6 +30,24 @@ void config_LED_RGB(void)
 	/* Port E Clock Gate Control: Clock enabled */
 	CLOCK_EnableClock(kCLOCK_PortE);
 
+	const port_pin_config_t pinOutput_config = { kPORT_PullDisable,				// 0U
+												 kPORT_FastSlewRate,			// 0U
+												 kPORT_PassiveFilterDisable,	// 0U
+												 kPORT_OpenDrainDisable,		// 0U
+												 kPORT_LowDriveStrength,		// 0U
+												 	 kPORT_MuxAsGpio,				// 1U
+												 kPORT_UnlockRegister 			// 0U
+												    };
+
+    /* PORTC (pin  9) is configured as PTC9  */
+    PORT_SetPinConfig(PORTC,  9U, &pinOutput_config);
+
+    /* PORTE (pin  6) is configured as PTE6  */
+    PORT_SetPinConfig(PORTE,  6U, &pinOutput_config);
+
+    /* PORTA (pin 11) is configured as PTA11 */
+    PORT_SetPinConfig(PORTA, 11U, &pinOutput_config);
+
 	/* Init output LED GPIO. */
 	GPIO_PinInit(BOARD_LEDR_GPIO, BOARD_LEDR_GPIO_PIN, &led_config);
 	GPIO_PortSet(BOARD_LEDR_GPIO, 1u << BOARD_LEDR_GPIO_PIN);

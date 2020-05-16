@@ -15,21 +15,21 @@ void task_SerialClock_SCK( void*data )
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 
 	parameters_task_t parameters_task = *((parameters_task_t*)data);
-	static uint32_t toggle = true;
+	static uint32_t toggle = false;
 
 	while(1)
 	{
-		xSemaphoreGive(parameters_task.Sempahore_serial_clock);
-		xSemaphoreGive(parameters_task.Semaphore_Serial_data);
+//		xSemaphoreGive(parameters_task.Sempahore_serial_clock);
+//		xSemaphoreGive(parameters_task.Semaphore_Serial_data);
 
 		printf("SCK is running\n");
 		num_task++;
 		PRINTF("num_task: %i\n", num_task);
 
-		if (toggle == false) { 				// Set LED 0
+		if (toggle == false) { 				// RED = ON
 			GPIO_PortClear(BOARD_LEDR_GPIO, 1u << BOARD_LEDR_GPIO_PIN);
 			toggle = true;
-		} else { 							// Clear LED 0
+		} else { 							// RED = OFF
 			GPIO_PortSet(BOARD_LEDR_GPIO, 1u << BOARD_LEDR_GPIO_PIN);
 			toggle = false;
 		}
