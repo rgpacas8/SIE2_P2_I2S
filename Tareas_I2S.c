@@ -12,6 +12,7 @@
 void task_SerialClock_SCK( void*data )
 {
 	uint32_t num_task = 0;
+	uint8_t  cont_flanco_bajada = 0;
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 
 	parameters_task_t parameters_task = *((parameters_task_t*)data);
@@ -34,6 +35,12 @@ void task_SerialClock_SCK( void*data )
 			GPIO_PortSet(BOARD_LEDR_GPIO, 1u << BOARD_LEDR_GPIO_PIN);
 			GPIO_PinWrite(GPIOA, pin6, CERO);	// PTA6 = 0U
 			toggle = false;
+			cont_flanco_bajada++;
+			if(cont_flanco_bajada==4){
+				xSemaphoreGive(parameters_task.Semaphore_task_word);
+				cont_flanco_bajada=0;
+			}
+
 		}
 
 		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(SCK_TIME_MS));
@@ -42,17 +49,31 @@ void task_SerialClock_SCK( void*data )
 
 void task_WordSelect_WS( void*data )
 {
+	uint32_t num_task = 0;
+	TickType_t xLastWakeTime = xTaskGetTickCount();
 	parameters_task_t parameters_task = *((parameters_task_t*)data);
-		TickType_t xLastWakeTime = xTaskGetTickCount();
+	static uint32_t toggle = false;
+
+
 
 	while(1)
 	{
 		xSemaphoreTake(parameters_task.Semaphore_task_word, portMAX_DELAY);
+
 		printf("WS is running\n");
-		xSemaphoreGive(parameters_task.Semaphore_task_word);
+		num_task++;
+		PRINTF("num_task_ws: %i\n", num_task);
 
+		if (toggle == false) { 					// RED = ON
+			GPIO_PortClear(BOARD_LEDR_GPIO, 1u << BOARD_LEDR_GPIO_PIN);
+			GPIO_PinWrite(GPIOA, pin7, UNO);	// PTA7 = 1U
+			toggle = true;
+		} else { 								// RED = OFF
+			GPIO_PortSet(BOARD_LEDR_GPIO, 1u << BOARD_LEDR_GPIO_PIN);
+			GPIO_PinWrite(GPIOA, pin7, CERO);	// PTA7 = 0U
+			toggle = false;
+		}
 		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(20));
-
 	}
 }
 

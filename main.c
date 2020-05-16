@@ -59,7 +59,7 @@ int main(void) {
     parameters_task.event_FreeRTOs = xEventGroupCreate();
 
     xTaskCreate( task_SerialClock_SCK, "task_Serial_clock", 200, (void*)&parameters_task, configMAX_PRIORITIES,   NULL );
-//    xTaskCreate( task_WordSelect_WS,   "task_Word_select",  200, (void*)&parameters_task, configMAX_PRIORITIES,   NULL );
+    xTaskCreate( task_WordSelect_WS,   "task_Word_select",  200, (void*)&parameters_task, configMAX_PRIORITIES,   NULL );
 //    xTaskCreate( task_SerialData_SD,   "task_Serial_data",  200, (void*)&parameters_task, configMAX_PRIORITIES,   NULL );
 
     vTaskStartScheduler();
