@@ -32,7 +32,6 @@
 #include "GPIO.h"
 
 
-
 int main(void) {
 
 	/* Init board hardware. */
@@ -47,7 +46,10 @@ int main(void) {
     static parameters_task_t parameters_task;
 
 	config_LED_RGB();
-	config_SW3();
+	//	config_SW3();
+	I2S_config_SCK( pin6 );		// SCK - serial clock
+	I2S_config_WS(  pin7 );		// WS  - word select
+	I2S_config_SD(  pin8 );		// SD  - serial data
 
     parameters_task.Semaphore_task_word = xSemaphoreCreateBinary();
     parameters_task.Sempahore_serial_clock = xSemaphoreCreateBinary();
@@ -57,7 +59,7 @@ int main(void) {
     parameters_task.event_FreeRTOs = xEventGroupCreate();
 
     xTaskCreate( task_SerialClock_SCK, "task_Serial_clock", 200, (void*)&parameters_task, configMAX_PRIORITIES,   NULL );
-//    xTaskCreate( task_WordSelect_WS,   "task_word_select",  200, (void*)&parameters_task, configMAX_PRIORITIES,   NULL );
+//    xTaskCreate( task_WordSelect_WS,   "task_Word_select",  200, (void*)&parameters_task, configMAX_PRIORITIES,   NULL );
 //    xTaskCreate( task_SerialData_SD,   "task_Serial_data",  200, (void*)&parameters_task, configMAX_PRIORITIES,   NULL );
 
     vTaskStartScheduler();

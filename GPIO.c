@@ -37,7 +37,7 @@ void config_LED_RGB(void)
 												 kPORT_LowDriveStrength,		// 0U
 												 	 kPORT_MuxAsGpio,				// 1U
 												 kPORT_UnlockRegister 			// 0U
-												    };
+												};
 
     /* PORTC (pin  9) is configured as PTC9  */
     PORT_SetPinConfig(PORTC,  9U, &pinOutput_config);
